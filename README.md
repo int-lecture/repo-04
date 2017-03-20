@@ -34,3 +34,7 @@ Repository for Team 04
 * Ich als Geschäftsmann möchte:
 
     1. Werbung auf dem Messenger schalten können, um die Nachfrage auf ein Produkt zu erhöhen. !!!
+    
+* Ich als Student möchte:
+ 
+    1. eine Art Schere Stein Papier Spiel um Entscheidunsfragen mit meinen Mitmenschen zu lösen.
