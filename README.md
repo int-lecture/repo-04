@@ -25,3 +25,5 @@ Repository for Team 04
     1. eine Passwort vergessen funktion haben, falls ich mein Passwort vergesse.
     1. ein Einstellungesmenü haben, um das Programm auf mich zuzuschneiden.
     1. Nachrichten schreiben können, um chatten zu können.
+
+https://docs.google.com/document/d/1-Q2HCuqK4kuesbvslJ20yQ9UYmxkbt0n5e2a84hlzTg/edit?usp=sharing
