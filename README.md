@@ -6,11 +6,13 @@ Repository for Team 04
     1. nach Geschlecht & Altersgruppen sortieren können, da ich mich nur für bestimmte Personengruppen interessiere.
     2. meinen Messenger auch mobil nutzen können, um auch unterwegs chatten zu können.
     3. Menschen blockieren können, um meine Expartner nicht mehr zu ertragen.
+    4. Menschen melden können, um meine Plattform zu säubern.
     
 * Ich als Elternteil möchte:
 
     1. eine Altersbeschränkung, um mein Kind vor gefährlichen Inhalten und Personen zu schützen.
     2. eine Sprachfilterung, um mein Kind vor Cybermobbing zu schützen.
+    3. Sprachnachrichten versenden können, um mein Kind zu sagen, dass ich es lieb habe.
     
 * Ich als Schichtleiter möchte:
 
