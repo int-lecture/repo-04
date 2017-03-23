@@ -25,10 +25,17 @@
   
 ## Statische Inhalte
 
-  * 
+  * Verwaltung von Medien (Fotos,Filme,...)
+  * Speichern und weiterversenden von Medien und Nachrichten.
   
   
 ## Komponenten (mehrfachverwendbar)
 
+  * Komponenten wie Authentifizierung sowie Verschlüsselung sollten bei großen Projekten mehrfach verwendet werden um so die Sicherheit vor Dritten zu schützen.
+  * Der Webserver muss sich ständig mit anderen Komponenten Verbinden, was bei mehr Usern schnell zu Probleme führen kann.
+  Man sollte deshalb auch mehrerer Webservern zur Verfügung stellen.
+  
 
 ## Komponenten (einzigartig)
+
+  * Acc-Manager bedient lediglich das UI vom jeweiligen Benutzer und hat daher keine Interaktion mit der Aussenwelt.
