@@ -26,3 +26,9 @@
 ## Statische Inhalte
 
   * 
+  
+  
+## Komponenten (mehrfachverwendbar)
+
+
+## Komponenten (einzigartig)
