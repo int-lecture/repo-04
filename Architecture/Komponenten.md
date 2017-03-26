@@ -1,6 +1,5 @@
 # Komponenten
 
-
 ## Nachrichten-Verteiler
 
   * Versendet Nachrichten an den jeweiligen empfänger.
@@ -28,10 +27,18 @@
   * Verwaltung von Medien (Fotos,Filme,...)
   * Speichern und weiterversenden von Medien und Nachrichten.
   
+## Load Balancer
+
+  * sorgt für die Verteilung der Verbindungen auf die Webserver.
+  * soll dafür sorgen, dass einzelne WEbserver nicht überlastet werden.
+  
+## User Interface
+  
+  * Daten werden für den User anschaulich dargestellt, sodass dieser mit dem Programm interagieren kann ohne Vorkenntnisse zu haben.
   
 ## Komponenten (mehrfachverwendbar)
 
-  * Komponenten wie Authentifizierung sowie Verschlüsselung sollten bei großen Projekten mehrfach verwendet werden um so die Sicherheit vor Dritten zu schützen.
+  * Komponenten wie Authentifizierung sowie Verschlüsselung sollten bei großen Projekten mehrfach verwendet werden um so die Sicherheit  vor Dritten zu schützen.
   * Der Webserver muss sich ständig mit anderen Komponenten Verbinden, was bei mehr Usern schnell zu Probleme führen kann.
   Man sollte deshalb auch mehrerer Webservern zur Verfügung stellen.
   
