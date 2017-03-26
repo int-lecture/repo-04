@@ -2,7 +2,7 @@
 
 ## Nachrichten-Verteiler
 
-  * Versendet Nachrichten an den jeweiligen empfänger.
+  * Versendet Nachrichten an den jeweiligen Empfänger.
   * Nachrichten werden von Datenbank 1 zu Datenbank 2 versendet.
   * Chatverlauf wird auf Abruf wieder hergestellt.
 
@@ -13,8 +13,8 @@
 
 ## Verschlüsselung
 
-  * Sorgt dafür, dass der Zugriff auf ein Benutzerkonto nicht von dritte verwendet werden kann.
-  * Benötigt Anmeldedaten zur Überprüfung der eingaben.
+  * Sorgt dafür, dass der Zugriff auf ein Benutzerkonto nicht von Dritten verwendet werden kann.
+  * Benötigt Anmeldedaten zur Überprüfung der Eingaben.
 
 ## Authentifizierung
 
@@ -30,7 +30,7 @@
 ## Load Balancer
 
   * sorgt für die Verteilung der Verbindungen auf die Webserver.
-  * soll dafür sorgen, dass einzelne WEbserver nicht überlastet werden.
+  * soll dafür sorgen, dass einzelne Webserver nicht überlastet werden.
   
 ## User Interface
   
