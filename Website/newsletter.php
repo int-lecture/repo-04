@@ -19,7 +19,7 @@
 			fwrite($file, $_POST["nachname"] . ":");
 		   fwrite($file, $_POST["E-Mail"] . "\n");
 		   fclose($file);
-		   echo "<script type='text/javascript'>alert('Erfolgreich f&uuml;r den Newsletter registriert');</script>";
+		   echo "<script type='text/javascript'>alert('Erfolgreich fuer den Newsletter registriert');</script>";
 		   }}
 	 echo $error;
 ?>	
