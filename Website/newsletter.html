@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="menu.css" />
+<title>Blumencorp</title>
+</head>
+<body>
+<h1>Newsletter</h1>
+<hr>
+
+<div class="menue">
+	<ul>
+		<li><a href="index.html"><b>Home</b></a></li>
+		<li><a href="produkt.html"><b>Produkte</b></a></li>
+		<li><a href="profil.html"><b>&Uuml;ber uns</b></a></li>
+		<!-- 
+		<ul>
+			<li><a href="profil.html"><b>Soheb Abdi</b></a></li>
+			<li><a href="profil.html"><b>Dario Capuana</b></a></li>
+			<li><a href="profil.html"><b>Aaron Kn&ouml;rzer</b></a></li>
+		</ul> 
+		-->
+		<li><a href="impressum.html"><b>Impressum</b></a></li>
+		<li><a href="newsletter.html"><b>Newsletter</b></a></li>
+	</ul>
+
+<br>
+</div>
+
+<h3><U>Tragen Sie sich bitte hier für unseren Newsletter ein.</U></h3>
+<form action="newsletter.php" method="POST">
+	Vorname: <input type="text" name="vorname"><br>
+	Nachname:<input type="text" name="nachname"><br>
+	Email:<input type="text" name="E-Mail"><br>
+	<input type="checkbox" name="Datenschutz" value="True">AGBs aktzeptieren<br>
+	<?php echo $error; ?>
+	<input type="submit" value="Newsletter registrieren"><br>
+	
+</form><br>
+
+</body>
+</html>

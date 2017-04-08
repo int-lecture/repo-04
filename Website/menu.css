@@ -1,0 +1,43 @@
+/* CSSTerm.com Simple CSS menu */
+
+h1 {
+	color: ;
+	text-align: center;
+}
+
+body {
+	background-color: #b0e0e6;
+	
+}
+
+br { clear:left }
+
+.menue {
+    width: 100%;
+    background-color: #005555;
+}
+
+.menue ul {
+    margin: 0; padding: 0;
+    float: center;
+}
+
+.menue ul li {
+    display: inline;
+}
+
+.menue ul li a {
+    float: left; text-decoration: none;
+    color: white; 
+    padding: 20px 20px;
+    background-color:  #005555;
+}
+ 
+.menue ul li a:visited {
+    color: white;
+}
+ 
+.menue ul li a:hover, .menue ul li .current {
+    color: red;
+    background-color: #5FD367;
+}
