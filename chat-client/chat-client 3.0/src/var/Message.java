@@ -95,15 +95,13 @@ class Message {
 		return String.format("{ 'date': '%s', 'sequence': '%s'}".replace('\'', '"'),
 				sdf.format(new Date()), sequence);
 	}
-	
-	public String toStringget() {
-		SimpleDateFormat sdf = new SimpleDateFormat(ISO8601);
 
-		return String.format("{ 'from': '%s', 'to': '%s', 'date': '%s', 'text': '%s', 'sequence': '%s'}".replace('\'', '"'), from, to,
-				sdf.format(new Date()), text, sequence);
-	}
-
-	
+	/**
+	 * Wandelt ein Nachricht in ein JsonObj
+	 * 
+	 * @param msg Obj welches umgewandelt wird
+	 * @return Jsonobj
+	 */
 	 public JSONObject messageToJson(Message msg){
 	    	JSONObject jobj=new JSONObject();
 	    	jobj.put("from", msg.from);
@@ -113,13 +111,11 @@ class Message {
 	    	jobj.put("sequenceNumber", msg.sequence);
 	    	return jobj;
 	    	
-	    }
-	 
+	    } 
 	 /**
-		 * Wandelt die Nachricht in ein Jsonobj
-		 * @param json wahr wenn seq+date in Json umgewandelt sind
+		 * Wandelt die Nachricht in ein Jsonobj + Userverwaltung
+		 * @param json obj welches in JsonFormat geändert wird
 		 * @return ein JSONObject
-		 * @throws JSONException
 		 */
 		public JSONObject isJsontrue(boolean json){
 			JSONObject obj = new JSONObject();
