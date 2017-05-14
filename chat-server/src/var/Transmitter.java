@@ -27,7 +27,7 @@ import org.json.JSONObject;
 @Path("/")
 public class Transmitter {
 
-	/** Verwaltung von Usern in ein JSONArray */
+	/** Verwaltung von Nachrichten in ein JSONArray */
 	static HashMap<String, JSONArray> messages = new HashMap<String, JSONArray>();
 	/** Verwaltung von Sequenznummern der User */
 	static HashMap<String, Integer> messageIds = new HashMap<String, Integer>();
@@ -118,7 +118,7 @@ public class Transmitter {
 			JSONArray msgArray=new JSONArray();
 			//alle neuen Nachrichten in msgArray speichern
 			for (int i=0; i<cloneArray.length();i++){
-				if (cloneArray.getJSONObject(i).getInt("sequence")>sequence){
+				if ((cloneArray.getJSONObject(i).getInt("sequence")>sequence)||sequence==0){
 						msgArray.put(cloneArray.getJSONObject(i));
 				}
 			}
