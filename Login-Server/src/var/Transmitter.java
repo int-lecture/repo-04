@@ -33,7 +33,7 @@ public class Transmitter {
 
 
 	/** String for date parsing in ISO 8601 format. */
-	public static final String ISO8601 = "yyyy-MM-dd'T'HH:mm:ssZ";
+	 public static final String ISO8601 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 	static SimpleDateFormat sdf = new SimpleDateFormat(ISO8601);
 
 	/**
@@ -67,7 +67,7 @@ public class Transmitter {
 		Date date = sdf.parse(jobj.optString("date"));
 		Login log = new Login();
 		int sequence = getSequence(jobj.optString("to")) ;
-		//messageID erhöhen bei neuer Nachricht
+		//messageID erhï¿½hen bei neuer Nachricht
 		messageIds.put(jobj.optString("to"), ++sequence);
 		jobj.put("sequence", sequence);
 
@@ -75,7 +75,7 @@ public class Transmitter {
 
 		if (msg.token != null && msg.from != null && msg.to != null && msg.date != null && msg.text != null) {
 			if (log.isBase64(msg.token)&& log.isValidToken(jobj)) {
-				//Testen ob Erste NAchricht für den EMpfänge
+				//Testen ob Erste NAchricht fï¿½r den EMpfï¿½nge
 				if (!messages.containsKey(msg.to)) {
 					JSONArray array = new JSONArray();
 					messages.put(msg.to, array);
@@ -130,7 +130,7 @@ public class Transmitter {
 						msgArray.put(cloneArray.getJSONObject(i));
 				}
 			}
-			//Alte Nachrichten löschen
+			//Alte Nachrichten lï¿½schen
 			if (msgArray.length()!=0){
 				messages.put(user_id, msgArray);
 

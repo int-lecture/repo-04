@@ -10,7 +10,7 @@ import com.sun.jersey.api.container.grizzly.GrizzlyWebContainerFactory;
 public class Server {
 	public static void main(String[] args) throws IllegalArgumentException, IOException {
 		//Test parameters
-		Login.userpassword.put("Hans", "help");
+		Login.userpassword.put("bob@web.de", "halloIchbinBob");
 		final String baseUri = "http://localhost:5001/";
 	final String paket = "var";
 	final Map<String, String> initParams = new HashMap<String, String>();

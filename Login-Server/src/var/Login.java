@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
@@ -36,33 +37,72 @@ public class Login {
 	//Speichern von User und Token und Expire Date von Token
 	static HashMap<String, JSONObject> usertoken=new HashMap<String, JSONObject>();
 
- 	public String getToken(){
- 		return this.token;
- 	}
-	public boolean isValidToken(JSONObject jobj) throws ParseException{
-		TimeZone tz = TimeZone.getTimeZone("GMT+1");
-		Date currentTime=Transmitter.sdf.parse(tz.toString());
-		Date date = Transmitter.sdf.parse(jobj.optString("expireDate"));
-		JSONObject savedData = usertoken.get(jobj.get(pseudonym));
-		if((savedData.getString(token)!=(jobj.getString(token)))&&  date.before(currentTime)){
+	/**
+	 * Die Methode prüft den gesendeten Token auf Gleicheit und Gültigkeit
+	 *
+	 * @param jobj Pseudonym und token des Users
+	 * @return True/False ob Token gültig
+	 */
+ 	public boolean isValidToken(JSONObject jobj) throws ParseException{
+ 		SimpleDateFormat sdf = new SimpleDateFormat(Transmitter.ISO8601);
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date()); //Aktuelle Uhrzeit
+		String tempTime = sdf.format(c.getTime());
+		Date currentTime=sdf.parse(tempTime);
+		JSONObject savedData = usertoken.get(jobj.get("pseudonym"));
+		Date otherDate=sdf.parse(savedData.getString("expireDate"));
+		//Vergleich übergebener Token mit dem gespeihcerten+ testen ob expireDate überschritten wurde
+		if(!(savedData.getString("token").equals(jobj.getString("token")))||  otherDate.before(currentTime)){
 			success=false;
 			return success;
 		}
+		success=true;
 		return success;
 	}
-
+	/**
+	 * Die Methode testet, ob die gesendete Email-Adresse gültiges Format besitzt
+	 *
+	 * @param mail Mail Adresse des Benutzers
+	 * @return True/False ob Email gültiges Format
+	 */
 	public boolean isValidEMail(String mail){
 		Pattern p = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
 		Matcher m = p.matcher(mail);
 		return m.matches();
 	}
-
+	/**
+	 * Die Methode testet, ob ein Token das richtige Format hat
+	 *
+	 * @param token Token des Benutzers
+	 * @return True/False ob Token gültiges Format
+	 */
 	public boolean isBase64(String token){
 		String stringToBeChecked = token;
 		boolean isBase = org.apache.commons.codec.binary.Base64.isArrayByteBase64(stringToBeChecked.getBytes());
 		return isBase;
 	}
-
+	/**
+	 * Die Methode lierstellt ein Ablaufdatum 1 Tag in der Zukunft
+	 *
+	 * @param 
+	 * @return futureTime aktuelle Zeit +1 Tag
+	 */
+	public String createExpireDate() throws ParseException{
+		SimpleDateFormat sdf = new SimpleDateFormat(Transmitter.ISO8601);
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date()); // Heutiges Datum benutzen
+		c.add(Calendar.DATE, 1); // 1 Tag gültigkeit
+		String futureTime = sdf.format(c.getTime());
+		return futureTime;
+		
+		
+	}
+	/**
+	 * Die Methode erstellt ein Token nach Base 64
+	 *
+	 * @param 
+	 * @return token im Base 64
+	 */
 	public String createToken() {
 		  SecureRandom random = new SecureRandom();
 		    byte bytes[] = new byte[128];
@@ -103,29 +143,28 @@ public class Login {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response login(String log) throws ParseException {
 		JSONObject jobj = new JSONObject(log);
-		Date date = Transmitter.sdf.parse(jobj.optString("expireDate"));
-		jobj.put(jobj.getString(token), createToken());
-		Login login = new Login(jobj.optString(user), jobj.optString(password), jobj.optString(token), date);
-		if ((login.user != null && login.password != null && login.token != null && login.expireDate != null) || !isValidEMail(user)) {
+		//Date date = Transmitter.sdf.parse(jobj.optString("expireDate"));
+		jobj.put("token", createToken());
+		Login login = new Login(jobj.getString("user"), jobj.getString("password"), jobj.getString("token"), expireDate);
+		//Testen ob alle wichtigen Daten da sind
+		if ((login.user != null && login.password != null && login.token != null /**  && login.expireDate != null **/) || !isValidEMail(user)) {
+			//Checken ob username vorhanden ist
 			if(userpassword.containsKey(login.user)){
-
-				if(userpassword.get(login.user)!=login.password){
+				//Passwort überprüfen
+				if(!userpassword.get(login.user).equals(login.password)){
 					// return Response.status(401);
 					return Response.status(Response.Status.UNAUTHORIZED).entity("Passwort falsch.").build();
 				}
-			}
-
 			JSONObject tokenisizer =new JSONObject();
 			tokenisizer.put("token", jobj.getString("token"));
-			tokenisizer.put("expireDate", date);
-			usertoken.put(jobj.getString(user), tokenisizer);
-
+			tokenisizer.put("expireDate", createExpireDate());
+			usertoken.put(jobj.getString("pseudonym"), tokenisizer);
 			// return Response.status(200);
 			return Response.status(Response.Status.OK).entity(login.toStringT()).build();
-		} else {
+			}}
 			// return Response.status(400);
-			return Response.status(Response.Status.BAD_REQUEST).entity("User existiert nicht.").build();
-		}
+		return Response.status(Response.Status.BAD_REQUEST).entity("User existiert nicht.").build();
+		
 
 	}
 
@@ -135,9 +174,9 @@ public class Login {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response auth(String auth) throws ParseException{
 		JSONObject jobj = new JSONObject(auth);
-		if (isValidToken(jobj) && isBase64(jobj.getString("token"))) {
+		//checken ob pseudonym vorhanden + token format richtig + Token gültig
+		if (usertoken.containsKey(jobj.getString("pseudonym")) && isBase64(jobj.getString("token"))&& isValidToken(jobj)) {
 			JSONObject temp= usertoken.get(jobj.getString("pseudonym"));
-
 			// return Response.status(200);
 			return Response.status(Response.Status.OK).entity(toStringS(temp)).build();
 		}
