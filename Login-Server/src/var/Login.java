@@ -23,6 +23,9 @@ import javax.ws.rs.core.Response;
 
 import org.json.JSONObject;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+
 @Path("")
 public class Login {
 	String user;
@@ -143,6 +146,7 @@ public class Login {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response login(String log) throws ParseException {
+		MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
 		JSONObject jobj = new JSONObject(log);
 		//Date date = Transmitter.sdf.parse(jobj.optString("expireDate"));
 		jobj.put("token", createToken());
