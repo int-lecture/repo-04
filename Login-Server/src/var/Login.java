@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -84,7 +85,7 @@ public class Login {
 	/**
 	 * Die Methode lierstellt ein Ablaufdatum 1 Tag in der Zukunft
 	 *
-	 * @param 
+	 * @param
 	 * @return futureTime aktuelle Zeit +1 Tag
 	 */
 	public String createExpireDate() throws ParseException{
@@ -94,13 +95,13 @@ public class Login {
 		c.add(Calendar.DATE, 1); // 1 Tag gültigkeit
 		String futureTime = sdf.format(c.getTime());
 		return futureTime;
-		
-		
+
+
 	}
 	/**
 	 * Die Methode erstellt ein Token nach Base 64
 	 *
-	 * @param 
+	 * @param
 	 * @return token im Base 64
 	 */
 	public String createToken() {
@@ -137,7 +138,7 @@ public class Login {
 
 	}
 
-	@PUT
+	@POST
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -164,11 +165,11 @@ public class Login {
 			}}
 			// return Response.status(400);
 		return Response.status(Response.Status.BAD_REQUEST).entity("User existiert nicht.").build();
-		
+
 
 	}
 
-	@PUT
+	@POST
 	@Path("/auth")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
