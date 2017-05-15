@@ -37,7 +37,7 @@ public class Transmitter {
 	static SimpleDateFormat sdf = new SimpleDateFormat(ISO8601);
 
 	/**
-	 * Die Methode liefert die Sequenznummer für die NAchrichten eines Benutzers
+	 * Die Methode liefert die Sequenznummer fï¿½r die NAchrichten eines Benutzers
 	 *
 	 * @param user_id Name des Benutzers
 	 * @return Sequenznummer des Benuntzer
@@ -52,7 +52,7 @@ public class Transmitter {
 	}
 
 	/**
-	 * Methode für das senden der Nachrichten.
+	 * Methode fï¿½r das senden der Nachrichten.
 	 *
 	 * @param recieved Nachricht die versendet werden soll
 	 * @return statuscode + statusmessage
@@ -66,12 +66,12 @@ public class Transmitter {
 		JSONObject jobj = new JSONObject(recieved);
 		Date date = sdf.parse(jobj.optString("date"));
 		int sequence = getSequence(jobj.optString("to")) ;
-		//messageID erhöhen bei neuer Nachricht
+		//messageID erhï¿½hen bei neuer Nachricht
 		messageIds.put(jobj.optString("to"), ++sequence);
 		jobj.put("sequence", sequence);
 		Message msg = new Message(jobj.optString("from"), jobj.optString("to"), date, jobj.optString("text"), sequence);
 		if (msg.from != null && msg.to != null && msg.date != null && msg.text != null) {
-			//Testen ob Erste NAchricht für den EMpfänger
+			//Testen ob Erste NAchricht fï¿½r den EMpfï¿½nger
 			if (!messages.containsKey(msg.to)) {
 				JSONArray array = new JSONArray();
 				messages.put(msg.to, array);
@@ -122,7 +122,7 @@ public class Transmitter {
 						msgArray.put(cloneArray.getJSONObject(i));
 				}
 			}
-			//Alte Nachrichten löschen
+			//Alte Nachrichten lï¿½schen
 			if (msgArray.length()!=0){
 				messages.put(user_id, msgArray);
 				try {
