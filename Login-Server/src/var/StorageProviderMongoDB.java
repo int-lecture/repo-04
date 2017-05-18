@@ -79,20 +79,13 @@ class StorageProviderMongoDB {
      */
     public synchronized JSONObject getUserData (String user){
     	//
-    	System.out.println("Hello5");
-    	
     	MongoCollection<Document> collection = database.getCollection("login");
-    	System.out.println("Hello6");
     	Document userdata= collection.find(eq("username", user)).first();
-    	System.out.println("Hello7");
-
        //keine Daten für den User vorhanden
         if (userdata==null) {
-        	System.out.println("Hello8");
             return null;
         }
         else {
-        	System.out.println("Hello9");
         	userdata.append("username", user);
         	return new JSONObject(userdata.toJson());
         }
