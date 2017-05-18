@@ -23,7 +23,7 @@ import com.mongodb.client.MongoDatabase;
  * Storage provider for a MongoDB.
  */
 class StorageProviderMongoDB {
-	private static String MONGO_URL= "mongodb://141.19.142.58:27017";
+	private static String MONGO_URL= "mongodb://localhost:27017";
     /** URI to the MongoDB instance. */
     private static MongoClientURI connectionString = new MongoClientURI(MONGO_URL);
 
@@ -73,21 +73,26 @@ class StorageProviderMongoDB {
         collection.insertOne(doc);
     }
 */
-    /**
+    /**Methode um Benutzersdaten
      * @return 
-     * @see var.chat.server.persistence.StorageProvider#retrieveMessages(java.lang.String, long, boolean)
+     * 
      */
     public synchronized JSONObject getUserData (String user){
     	//
+    	System.out.println("Hello5");
+    	
     	MongoCollection<Document> collection = database.getCollection("login");
-        Document userdata= collection.find(eq("username", user)).first();
-    
+    	System.out.println("Hello6");
+    	Document userdata= collection.find(eq("username", user)).first();
+    	System.out.println("Hello7");
 
        //keine Daten für den User vorhanden
-        if (userdata.isEmpty()) {
+        if (userdata==null) {
+        	System.out.println("Hello8");
             return null;
         }
         else {
+        	System.out.println("Hello9");
         	userdata.append("username", user);
         	return new JSONObject(userdata.toJson());
         }
@@ -100,7 +105,7 @@ class StorageProviderMongoDB {
     
 
        //keine Daten für den User vorhanden
-        if (tokenData.isEmpty()) {
+        if (tokenData==null) {
             return null;
         }
         else return new JSONObject(tokenData.toString());
