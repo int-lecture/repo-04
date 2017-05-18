@@ -35,12 +35,23 @@ public class Login {
 	String pseudonym;
 	boolean success=true;
 
-
+	StorageProviderMongoDB mongo= new StorageProviderMongoDB();
 	//Speichern von User und Password
 	static HashMap<String, String> userpassword=new HashMap <String,String>();
 	//Speichern von User und Token und Expire Date von Token
 	static HashMap<String, JSONObject> usertoken=new HashMap<String, JSONObject>();
 
+	public Login() {
+
+	}
+	public Login(String user, String password, String pesudeonym) {
+		this.user=user;
+		this.password=password;
+		this.pseudonym=pseudonym;
+		this.expireDate=null;
+		this.token=null;
+	}
+	
 	/**
 	 * Die Methode prüft den gesendeten Token auf Gleicheit und Gültigkeit
 	 *
@@ -53,7 +64,10 @@ public class Login {
 		c.setTime(new Date()); //Aktuelle Uhrzeit
 		String tempTime = sdf.format(c.getTime());
 		Date currentTime=sdf.parse(tempTime);
-		JSONObject savedData = usertoken.get(jobj.get("pseudonym"));
+		//Zugriff auf Speicher ohne Datenbank
+		//JSONObject savedData = usertoken.get(jobj.get("pseudonym"));
+		//Zugriff auf Speicher mit Datenbank
+		JSONObject savedData= mongo.getTokenData(jobj.getString("pseudonym"));
 		Date otherDate=sdf.parse(savedData.getString("expireDate"));
 		//Vergleich übergebener Token mit dem gespeihcerten+ testen ob expireDate überschritten wurde
 		if(!(savedData.getString("token").equals(jobj.getString("token")))||  otherDate.before(currentTime)){
@@ -115,9 +129,6 @@ public class Login {
 		String token = encoder.encodeToString(bytes);
 		return token;
 	}
-	public Login() {
-
-	}
 	public Login(String user, String password, String token, Date expireDate) {
 		this.user = user;
 		this.password = password;
@@ -153,17 +164,25 @@ public class Login {
 		Login login = new Login(jobj.getString("user"), jobj.getString("password"), jobj.getString("token"), expireDate);
 		//Testen ob alle wichtigen Daten da sind
 		if ((login.user != null && login.password != null && login.token != null /**  && login.expireDate != null **/) || !isValidEMail(user)) {
-			//Checken ob username vorhanden ist
-			if(userpassword.containsKey(login.user)){
-				//Passwort überprüfen
-				if(!userpassword.get(login.user).equals(login.password)){
+			//Checken ob username vorhanden ist ohne Datenbank
+			//if(userpassword.containsKey(login.user)){
+			//Checken ob Usewrname vorhanden mit Datenbank
+			if(mongo.getUserData(login.user)!=null){
+				//Passwort überprüfen ohne Daternbank
+				//if(!userpassword.get(login.user).equals(login.password)){
+				//Passwort überprüfen mit Datenbank
+				if(!mongo.getUserData(login.user).get("password").equals(login.password)){
 					// return Response.status(401);
 					return Response.status(Response.Status.UNAUTHORIZED).entity("Passwort falsch.").build();
 				}
 			JSONObject tokenisizer =new JSONObject();
 			tokenisizer.put("token", jobj.getString("token"));
+			//Abspeicherung OHNE DATENBANK
 			tokenisizer.put("expireDate", createExpireDate());
 			usertoken.put(jobj.getString("pseudonym"), tokenisizer);
+			//abspeicherung in Datenbank:
+			tokenisizer.put("pseudonym", jobj.getString("pseudonym"));
+			mongo.saveTokenData(tokenisizer);
 			// return Response.status(200);
 			return Response.status(Response.Status.OK).entity(login.toStringT()).build();
 			}}
@@ -180,9 +199,12 @@ public class Login {
 	public Response auth(String auth) throws ParseException{
 		JSONObject jobj = new JSONObject(auth);
 		//checken ob pseudonym vorhanden + token format richtig + Token gültig
-		if (usertoken.containsKey(jobj.getString("pseudonym")) && isBase64(jobj.getString("token"))&& isValidToken(jobj)) {
-			JSONObject temp= usertoken.get(jobj.getString("pseudonym"));
+		//if (usertoken.containsKey(jobj.getString("pseudonym")) && isBase64(jobj.getString("token"))&& isValidToken(jobj)) {
+		if(mongo.getTokenData(jobj.getString("pseudonym"))!=null && isBase64(jobj.getString("token"))&& isValidToken(jobj)) {
+			//return erstellemn ohne Datanbank
+			//JSONObject temp= usertoken.get(jobj.getString("pseudonym"));
 			// return Response.status(200);
+			JSONObject temp=mongo.getTokenData(jobj.getString("pseudonym"));
 			return Response.status(Response.Status.OK).entity(toStringS(temp)).build();
 		}
 		else{

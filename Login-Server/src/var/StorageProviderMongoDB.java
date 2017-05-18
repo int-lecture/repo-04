@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bson.Document;
+import org.json.JSONObject;
 
 import com.mongodb.Block;
 import com.mongodb.MongoClient;
@@ -21,21 +22,20 @@ import com.mongodb.client.MongoDatabase;
 /**
  * Storage provider for a MongoDB.
  */
-class StorageProviderMongoDB implements StorageProvider {
-
+class StorageProviderMongoDB {
+	private static String MONGO_URL= "mongodb://141.19.142.58:27017";
     /** URI to the MongoDB instance. */
-    private static MongoClientURI connectionString =
-            new MongoClientURI(MONGO_URL);
+    private static MongoClientURI connectionString = new MongoClientURI(MONGO_URL);
 
     /** Client to be used. */
     private static MongoClient mongoClient = new MongoClient(connectionString);
 
     /** Mongo database. */
-    private static MongoDatabase database = mongoClient.getDatabase("chat");
+    private static MongoDatabase database = mongoClient.getDatabase("users");
 
     /**
-     * @see var.chat.server.persistence.StorageProvider#retrieveAndUpdateSequence(java.lang.String)
-     */
+      @see var.chat.server.persistence.StorageProvider#retrieveAndUpdateSequence(java.lang.String)
+     
     public synchronized long retrieveAndUpdateSequence(String userId) {
         MongoCollection<Document> sequences = database.getCollection(
                 "sequences");
@@ -57,11 +57,11 @@ class StorageProviderMongoDB implements StorageProvider {
 
         return sequence;
     }
-
+ */
     /**
      * @see var.chat.server.persistence.StorageProvider#storeMessage(var.chat.server.domain.Message)
      */
-    public synchronized void storeMessage(Message message) {
+  /**  public synchronized void storeMessage(Message message) {
         MongoCollection<Document> collection = database.getCollection("messages");
 
         Document doc = new Document("from", message.from)
@@ -72,45 +72,57 @@ class StorageProviderMongoDB implements StorageProvider {
 
         collection.insertOne(doc);
     }
-
+*/
     /**
+     * @return 
      * @see var.chat.server.persistence.StorageProvider#retrieveMessages(java.lang.String, long, boolean)
      */
-    public synchronized List<Message> retrieveMessages(String userId,
-            long sequenceNumber, boolean deleteOldMessages) {
+    public synchronized JSONObject getUserData (String user){
+    	//
+    	MongoCollection<Document> collection = database.getCollection("login");
+        Document userdata= collection.find(eq("username", user)).first();
+    
 
-        MongoCollection<Document> collection = database.getCollection("messages");
-
-        // Remove Messages with seq < provided seq no
-        if (deleteOldMessages) {
-            collection.deleteMany(and(lte("sequence", sequenceNumber), eq("to", userId)));
-        }
-
-        // Retreive remaining documents
-        List<Document> documents = new ArrayList<>();
-        collection.find(and(gt("sequence", sequenceNumber), eq("to", userId)))
-                .forEach((Block<Document>) e -> documents.add(e));
-
-        // No messages for user there
-        if (documents.isEmpty()) {
+       //keine Daten für den User vorhanden
+        if (userdata.isEmpty()) {
             return null;
         }
-
-        List<Message> messagesForUser = new ArrayList<>();
-        Collections.sort(messagesForUser, (a,b) -> (int) (b.sequence - a.sequence));
-
-        for (Document document : documents) {
-            Message m = new Message();
-            m.to = document.getString("to");
-            m.from = document.getString("from");
-            m.date = document.getString("date");
-            m.sequence = document.getLong("sequence");
-            m.text = document.getString("text");
-            messagesForUser.add(m);
+        else {
+        	userdata.append("username", user);
+        	return new JSONObject(userdata.toJson());
         }
-
-        return messagesForUser;
     }
+    
+    public synchronized JSONObject getTokenData (String pseudonym){
+
+        MongoCollection<Document> collection = database.getCollection("token");
+        Document tokenData= collection.find(eq("pseudonym", pseudonym)).first();
+    
+
+       //keine Daten für den User vorhanden
+        if (tokenData.isEmpty()) {
+            return null;
+        }
+        else return new JSONObject(tokenData.toString());
+
+    }
+    
+    public synchronized void saveTokenData(JSONObject token){
+    	MongoCollection<Document> collection = database.getCollection("token");
+        Document tokenData= new Document("token", token.get("token")).append("expireDate", token.getString("expireDate")).append("pseudonym", token.getString("pseudonym"));
+        
+        if (collection.find(eq("pseudonym", token.getString("pseudonym"))).first() != null) {
+			collection.updateMany(eq("pseudonym", token.getString("pseudonym")), new Document("$set", tokenData));
+        			   }
+        else{
+        	collection.insertOne(tokenData);
+        }
+        	
+        }
+        
+        
+    	
+    
 
     /**
      * @see var.chat.server.persistence.StorageProvider#clearForTest()
