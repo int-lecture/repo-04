@@ -35,7 +35,7 @@ public class Login {
 	String pseudonym;
 	boolean success=true;
 
-	StorageProviderMongoDB mongo= new StorageProviderMongoDB();
+	Database mongo= new Database();
 	//Speichern von User und Password
 	static HashMap<String, String> userpassword=new HashMap <String,String>();
 	//Speichern von User und Token und Expire Date von Token

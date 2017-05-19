@@ -4,14 +4,21 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 import com.sun.grizzly.http.SelectorThread;
 import com.sun.jersey.api.container.grizzly.GrizzlyWebContainerFactory;
 
 public class Server {
 	public static void main(String[] args) throws IllegalArgumentException, IOException {
 		//Test parameters
-		Login.userpassword.put("bob@web.de", "halloIchbinBob");
-		final String baseUri = "http://localhost:5001/";
+		//Login.userpassword.put("bob@web.de", "halloIchbinBob");
+		
+	//New TEST PARAMETERS
+		Database mongo = new Database();
+		JSONObject object= new JSONObject("{'user':'bob@web.de','password':'halloIchbinBob','pseudonym':'bob'}" );
+		mongo.saveUserData(object);
+	final String baseUri = "http://localhost:5001/";
 	final String paket = "var";
 	final Map<String, String> initParams = new HashMap<String, String>();
 	initParams.put("com.sun.jersey.config.property.packages", paket);

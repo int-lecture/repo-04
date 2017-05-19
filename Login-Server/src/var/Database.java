@@ -22,7 +22,7 @@ import com.mongodb.client.MongoDatabase;
 /**
  * Storage provider for a MongoDB.
  */
-class StorageProviderMongoDB {
+class Database {
 	private static String MONGO_URL= "mongodb://localhost:27017";
     /** URI to the MongoDB instance. */
     private static MongoClientURI connectionString = new MongoClientURI(MONGO_URL);
@@ -79,7 +79,7 @@ class StorageProviderMongoDB {
      */
     public synchronized JSONObject getUserData (String user){
     	//
-    	MongoCollection<Document> collection = database.getCollection("login");
+    	MongoCollection<Document> collection = database.getCollection("user");
     	Document userdata= collection.find(eq("username", user)).first();
        //keine Daten für den User vorhanden
         if (userdata==null) {
@@ -90,6 +90,18 @@ class StorageProviderMongoDB {
         	return new JSONObject(userdata.toJson());
         }
     }
+    public synchronized void saveUserData(JSONObject user){
+    	MongoCollection<Document> collection = database.getCollection("user");
+        Document userData= new Document("user", user.get("user")).append("password", user.getString("password")).append("pseudonym", user.getString("pseudonym"));
+        
+        if (collection.find(eq("user", userData.getString("user"))).first() != null) {
+			collection.updateMany(eq("user", userData.getString("user")), new Document("$set", userData));
+        			   }
+        else{
+        	collection.insertOne(userData);
+        }
+        	
+        }
     
     public synchronized JSONObject getTokenData (String pseudonym){
 
@@ -118,9 +130,6 @@ class StorageProviderMongoDB {
         	
         }
         
-        
-    	
-    
 
     /**
      * @see var.chat.server.persistence.StorageProvider#clearForTest()
