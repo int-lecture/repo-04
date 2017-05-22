@@ -22,6 +22,10 @@ public class Server {
 		JSONObject object= new JSONObject("{'user':'bob@web.de','pseudonym':'bob'}" );
 		object.put("password", password);
 		mongo.saveUserData(object);
+		String password2 =  SecurityHelper.hashPassword("1");
+		JSONObject jobject= new JSONObject("{'user':'job@web.de','pseudonym':'job'}" );
+		jobject.put("password", password2);
+		mongo.saveUserData(jobject);
 	final String baseUri = "http://localhost:5001/";
 	final String paket = "var";
 	final Map<String, String> initParams = new HashMap<String, String>();

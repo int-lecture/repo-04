@@ -2,6 +2,7 @@ package var;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.ws.rs.Consumes;
@@ -20,11 +21,14 @@ import org.json.JSONObject;
  */
 @Path("")
 class Message {
+	
 
 
 	/** String for date parsing in ISO 8601 format. */
 	public static final String ISO8601 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 	static SimpleDateFormat sdf = new SimpleDateFormat(ISO8601);
+	
+	String token;
 	/** From. */
 	String from;
 
@@ -54,7 +58,8 @@ class Message {
 	 * @param sequence
 	 *            Sequence-Number.
 	 */
-	public Message(String from, String to, Date date, String text, int sequence) {
+	public Message(String token,String from, String to, Date date, String text, int sequence) {
+		this.token = token;
 		this.from = from;
 		this.to = to;
 		this.date = date;
@@ -74,8 +79,8 @@ class Message {
 	 * @param text
 	 *            Contents.
 	 */
-	public Message(String from, String to, Date date, String text) {
-		this(from, to, date, text, 0);
+	public Message(String token, String from, String to, Date date, String text) {
+		this(token,from, to, date, text, 0);
 	}
 
 	/**
@@ -116,7 +121,7 @@ class Message {
 	    }
 	 /**
 		 * Wandelt die Nachricht in ein Jsonobj + Userverwaltung
-		 * @param json obj welches in JsonFormat geändert wird
+		 * @param json obj welches in JsonFormat geï¿½ndert wird
 		 * @return ein JSONObject
 		 */
 		public JSONObject isJsontrue(boolean json){
