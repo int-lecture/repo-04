@@ -19,7 +19,7 @@ public class Server {
 	//New TEST PARAMETERS
 		Database mongo = new Database();
 		String password = SecurityHelper.hashPassword("halloIchbinBob");
-		JSONObject object= new JSONObject("{'user':'bob@web.de','password':'halloIchbinBob','pseudonym':'bob'}" );
+		JSONObject object= new JSONObject("{'user':'bob@web.de','pseudonym':'bob'}" );
 		object.put("password", password);
 		mongo.saveUserData(object);
 	final String baseUri = "http://localhost:5001/";

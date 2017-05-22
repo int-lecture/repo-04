@@ -1,6 +1,8 @@
 package var;
 
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +23,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.mongodb.MongoClient;
@@ -96,7 +99,6 @@ public class Login {
 	 * @return True/False ob Token gültiges Format
 	 */
 	public boolean isBase64(String token){
-		System.out.println("LULUUUUU");
 		String stringToBeChecked = token;
 		boolean isBase = org.apache.commons.codec.binary.Base64.isArrayByteBase64(stringToBeChecked.getBytes());
 		return isBase;
@@ -158,7 +160,7 @@ public class Login {
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response login(String log) throws ParseException {
+	public Response login(String log) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException, JSONException {
 		MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
 		JSONObject jobj = new JSONObject(log);
 		//Date date = Transmitter.sdf.parse(jobj.optString("expireDate"));
@@ -174,8 +176,7 @@ public class Login {
 				//Passwort überprüfen mit Datenbank ohne Security Helper
 				//if(!mongo.getUserData(login.user).get("password").equals(login.password)){
 				//Passwort überprüfen mit Datenbank und mit Securityhelper
-				System.out.println("Hellooo...its me");
-				if(SecurityHelper.validatePassword(login.password, (String) mongo.getUserData(login.user).get("password")  )){
+				if(SecurityHelper.validatePassword(SecurityHelper.hashPassword(login.password), (String) mongo.getUserData(login.user).get("password")  )){
 					// return Response.status(401);
 					return Response.status(Response.Status.UNAUTHORIZED).entity("Passwort falsch.").build();
 				}

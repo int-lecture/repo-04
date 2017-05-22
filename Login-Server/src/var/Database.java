@@ -79,7 +79,7 @@ class Database {
      */
     public synchronized JSONObject getUserData (String user){
     	//
-    	MongoCollection<Document> collection = database.getCollection("user);
+    	MongoCollection<Document> collection = database.getCollection("user");
     	Document userdata= collection.find(eq("user", user)).first();
        //keine Daten für den User vorhanden
         if (userdata==null) {

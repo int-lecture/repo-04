@@ -71,9 +71,6 @@ public class SecurityHelper {
             PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, hash.length * 8);
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             byte[] testHash = skf.generateSecret(spec).getEncoded();
-            System.out.println(testHash);
-            System.out.println(hash);
-            System.out.println("obendrüber");
             return Arrays.equals(testHash, hash);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             return false;
