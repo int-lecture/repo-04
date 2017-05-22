@@ -1,6 +1,8 @@
 package var;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,13 +12,15 @@ import com.sun.grizzly.http.SelectorThread;
 import com.sun.jersey.api.container.grizzly.GrizzlyWebContainerFactory;
 
 public class Server {
-	public static void main(String[] args) throws IllegalArgumentException, IOException {
+	public static void main(String[] args) throws IllegalArgumentException, IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 		//Test parameters
 		//Login.userpassword.put("bob@web.de", "halloIchbinBob");
 		
 	//New TEST PARAMETERS
 		Database mongo = new Database();
+		String password = SecurityHelper.hashPassword("halloIchbinBob");
 		JSONObject object= new JSONObject("{'user':'bob@web.de','password':'halloIchbinBob','pseudonym':'bob'}" );
+		object.put("password", password);
 		mongo.saveUserData(object);
 	final String baseUri = "http://localhost:5001/";
 	final String paket = "var";

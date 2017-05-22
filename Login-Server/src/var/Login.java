@@ -34,6 +34,7 @@ public class Login {
 	Date expireDate;
 	String pseudonym;
 	boolean success=true;
+	
 
 	Database mongo= new Database();
 	//Speichern von User und Password
@@ -95,6 +96,7 @@ public class Login {
 	 * @return True/False ob Token gültiges Format
 	 */
 	public boolean isBase64(String token){
+		System.out.println("LULUUUUU");
 		String stringToBeChecked = token;
 		boolean isBase = org.apache.commons.codec.binary.Base64.isArrayByteBase64(stringToBeChecked.getBytes());
 		return isBase;
@@ -161,17 +163,19 @@ public class Login {
 		JSONObject jobj = new JSONObject(log);
 		//Date date = Transmitter.sdf.parse(jobj.optString("expireDate"));
 		jobj.put("token", createToken());
-		Login login = new Login(jobj.getString("user"), jobj.getString("password"), jobj.getString("token"), expireDate);
+		Login login = new Login(jobj.getString("user"),jobj.getString("password"), jobj.getString("token"), expireDate);
 		//Testen ob alle wichtigen Daten da sind
 		if ((login.user != null && login.password != null && login.token != null /**  && login.expireDate != null **/) || !isValidEMail(user)) {
 			//Checken ob username vorhanden ist ohne Datenbank
-			//if(userpassword.containsKey(login.user)){
 			//Checken ob Usewrname vorhanden mit Datenbank
 			if(mongo.getUserData(login.user)!=null){
 				//Passwort überprüfen ohne Daternbank
 				//if(!userpassword.get(login.user).equals(login.password)){
-				//Passwort überprüfen mit Datenbank
-				if(!mongo.getUserData(login.user).get("password").equals(login.password)){
+				//Passwort überprüfen mit Datenbank ohne Security Helper
+				//if(!mongo.getUserData(login.user).get("password").equals(login.password)){
+				//Passwort überprüfen mit Datenbank und mit Securityhelper
+				System.out.println("Hellooo...its me");
+				if(SecurityHelper.validatePassword(login.password, (String) mongo.getUserData(login.user).get("password")  )){
 					// return Response.status(401);
 					return Response.status(Response.Status.UNAUTHORIZED).entity("Passwort falsch.").build();
 				}

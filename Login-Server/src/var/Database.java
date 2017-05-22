@@ -79,21 +79,20 @@ class Database {
      */
     public synchronized JSONObject getUserData (String user){
     	//
-    	MongoCollection<Document> collection = database.getCollection("user");
-    	Document userdata= collection.find(eq("username", user)).first();
+    	MongoCollection<Document> collection = database.getCollection("user);
+    	Document userdata= collection.find(eq("user", user)).first();
        //keine Daten für den User vorhanden
         if (userdata==null) {
             return null;
         }
         else {
-        	userdata.append("username", user);
+        	//userdata.append("user", user);
         	return new JSONObject(userdata.toJson());
         }
     }
     public synchronized void saveUserData(JSONObject user){
     	MongoCollection<Document> collection = database.getCollection("user");
         Document userData= new Document("user", user.get("user")).append("password", user.getString("password")).append("pseudonym", user.getString("pseudonym"));
-        
         if (collection.find(eq("user", userData.getString("user"))).first() != null) {
 			collection.updateMany(eq("user", userData.getString("user")), new Document("$set", userData));
         			   }
@@ -104,23 +103,19 @@ class Database {
         }
     
     public synchronized JSONObject getTokenData (String pseudonym){
-
         MongoCollection<Document> collection = database.getCollection("token");
         Document tokenData= collection.find(eq("pseudonym", pseudonym)).first();
-    
-
        //keine Daten für den User vorhanden
         if (tokenData==null) {
             return null;
         }
-        else return new JSONObject(tokenData.toString());
+        else return new JSONObject(tokenData.toJson());
 
     }
     
     public synchronized void saveTokenData(JSONObject token){
     	MongoCollection<Document> collection = database.getCollection("token");
         Document tokenData= new Document("token", token.get("token")).append("expireDate", token.getString("expireDate")).append("pseudonym", token.getString("pseudonym"));
-        
         if (collection.find(eq("pseudonym", token.getString("pseudonym"))).first() != null) {
 			collection.updateMany(eq("pseudonym", token.getString("pseudonym")), new Document("$set", tokenData));
         			   }

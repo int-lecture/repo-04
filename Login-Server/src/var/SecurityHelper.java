@@ -60,21 +60,20 @@ public class SecurityHelper {
      */
     public static boolean validatePassword(String password,
             String storedPassword) {
-
         if (password == null || storedPassword == null) {
             return false;
         }
-
         try {
             String[] parts = storedPassword.split(":");
             int iterations = Integer.parseInt(parts[0]);
             byte[] salt = decode(parts[1]);
             byte[] hash = decode(parts[2]);
-
             PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, hash.length * 8);
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             byte[] testHash = skf.generateSecret(spec).getEncoded();
-
+            System.out.println(testHash);
+            System.out.println(hash);
+            System.out.println("obendrüber");
             return Arrays.equals(testHash, hash);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             return false;
