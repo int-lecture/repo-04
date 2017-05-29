@@ -67,5 +67,6 @@
 	<classpathentry kind="lib" path="/libraries/lib/restassured/rest-assured-3.0.3.jar"/>
 	<classpathentry kind="lib" path="/libraries/lib/restassured/rest-assured-common-3.0.3.jar"/>
 	<classpathentry kind="lib" path="/libraries/lib/restassured/xml-path-3.0.3.jar"/>
+	<classpathentry kind="lib" path="/libraries/javax.ws.rs-api-2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

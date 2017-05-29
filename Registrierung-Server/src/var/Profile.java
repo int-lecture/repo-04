@@ -1,6 +1,7 @@
 package var;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -55,5 +56,16 @@ public class Profile {
 			return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
 		}
 		return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
+	}
+	@OPTIONS
+	@Path("/profile")
+	public Response optionsProfile() {
+	    return Response.ok("")
+	            .header("Access-Control-Allow-Origin", "*")
+	            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+	            .header("Access-Control-Allow-Credentials", "true")
+	            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+	            .header("Access-Control-Max-Age", "1209600")
+	            .build();
 	}
 }

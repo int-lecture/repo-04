@@ -1,5 +1,6 @@
 package var;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -16,10 +17,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -48,7 +53,7 @@ public class Login {
 	public Login() {
 
 	}
-	public Login(String user, String password, String pesudeonym) {
+	public Login(String user, String password, String pseudonym) {
 		this.user=user;
 		this.password=password;
 		this.pseudonym=pseudonym;
@@ -156,6 +161,7 @@ public class Login {
 
 	}
 
+
 	@POST
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -178,6 +184,7 @@ public class Login {
 				//Passwort überprüfen mit Datenbank und mit Securityhelper
 				if(SecurityHelper.validatePassword(SecurityHelper.hashPassword(login.password), (String) mongo.getUserData(login.user).get("password")  )){
 					// return Response.status(401);
+					System.out.println("psswort falsch");
 					return Response.status(Response.Status.UNAUTHORIZED).entity("Passwort falsch.").build();
 				}
 			JSONObject tokenisizer =new JSONObject();
@@ -189,9 +196,11 @@ public class Login {
 			tokenisizer.put("pseudonym", jobj.getString("pseudonym"));
 			mongo.saveTokenData(tokenisizer);
 			// return Response.status(200);
+			System.out.println("alles gut");
 			return Response.status(Response.Status.OK).entity(login.toStringT()).build();
 			}}
 			// return Response.status(400);
+		System.out.println("no user");
 		return Response.status(Response.Status.BAD_REQUEST).entity("User existiert nicht.").build();
 
 
@@ -216,5 +225,28 @@ public class Login {
 			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 
+	}
+	@OPTIONS
+	@Path("/login")
+	public Response optionsReg() {
+	    return Response.ok("")
+	            .header("Access-Control-Allow-Origin", "*")
+	            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+	            .header("Access-Control-Allow-Credentials", "true")
+	            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+	            .header("Access-Control-Max-Age", "1209600")
+	            .build();
+	}
+
+	@OPTIONS
+	@Path("/auth")
+	public Response optionsProfile() {
+	    return Response.ok("")
+	            .header("Access-Control-Allow-Origin", "*")
+	            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+	            .header("Access-Control-Allow-Credentials", "true")
+	            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+	            .header("Access-Control-Max-Age", "1209600")
+	            .build();
 	}
 }

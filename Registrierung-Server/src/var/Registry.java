@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -45,11 +46,8 @@ public class Registry {
 				try {
 					DBMS dbms = new DBMS();
 					dbms.createUser(pseudonym, password, email);
-					System.out.println("Test1");
 					JSONObject profilDetails = new JSONObject();
-					System.out.println("Test2");
 					profilDetails.put("success", "true");
-					System.out.println("Test3");
 					return Response.status(Response.Status.OK).entity("").build();
 				} catch (InvalidParameterException e) {
 					return Response.status(418).entity("Pseudonym or Username taken").build();
@@ -59,5 +57,17 @@ public class Registry {
 			return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
 		}
 		return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
+	}
+	
+	@OPTIONS
+	@Path("/register")
+	public Response optionsProfile() {
+	    return Response.ok("")
+	            .header("Access-Control-Allow-Origin", "*")
+	            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+	            .header("Access-Control-Allow-Credentials", "true")
+	            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+	            .header("Access-Control-Max-Age", "1209600")
+	            .build();
 	}
 }

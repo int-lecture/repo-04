@@ -92,7 +92,6 @@ public class DBMS {
 		tokenDoc.append("token", "save token");
 		tokenDoc.append("expire-date", new Date());
 		tokenCollection.insertOne(tokenDoc);
-		System.out.println("finisch");
 	}
 
 	public boolean checkToken(String pseudonym, String token) {
