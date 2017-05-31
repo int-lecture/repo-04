@@ -169,6 +169,7 @@ public class Login {
 	public Response login(String log) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException, JSONException {
 		MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
 		JSONObject jobj = new JSONObject(log);
+		System.out.println(log);
 		//Date date = Transmitter.sdf.parse(jobj.optString("expireDate"));
 		jobj.put("token", createToken());
 		Login login = new Login(jobj.getString("user"),jobj.getString("password"), jobj.getString("token"), expireDate);
@@ -182,10 +183,10 @@ public class Login {
 				//Passwort überprüfen mit Datenbank ohne Security Helper
 				//if(!mongo.getUserData(login.user).get("password").equals(login.password)){
 				//Passwort überprüfen mit Datenbank und mit Securityhelper
-				if(SecurityHelper.validatePassword(SecurityHelper.hashPassword(login.password), (String) mongo.getUserData(login.user).get("password")  )){
+				if(!SecurityHelper.validatePassword(login.password, (String) mongo.getUserData(login.user).get("password")  )){
 					// return Response.status(401);
 					System.out.println("psswort falsch");
-					return Response.status(Response.Status.UNAUTHORIZED).entity("Passwort falsch.").build();
+					return Response.status(Response.Status.UNAUTHORIZED).entity("Passwort falsch.").header("Access-Control-Allow-Origin", "*").build();
 				}
 			JSONObject tokenisizer =new JSONObject();
 			tokenisizer.put("token", jobj.getString("token"));
@@ -197,11 +198,11 @@ public class Login {
 			mongo.saveTokenData(tokenisizer);
 			// return Response.status(200);
 			System.out.println("alles gut");
-			return Response.status(Response.Status.OK).entity(login.toStringT()).build();
+			return Response.status(Response.Status.OK).entity(login.toStringT()).header("Access-Control-Allow-Origin", "*").build();
 			}}
 			// return Response.status(400);
 		System.out.println("no user");
-		return Response.status(Response.Status.BAD_REQUEST).entity("User existiert nicht.").build();
+		return Response.status(Response.Status.BAD_REQUEST).entity("User existiert nicht.").header("Access-Control-Allow-Origin", "*").build();
 
 
 	}
@@ -222,7 +223,7 @@ public class Login {
 			return Response.status(Response.Status.OK).entity(toStringS(temp)).build();
 		}
 		else{
-			return Response.status(Response.Status.UNAUTHORIZED).build();
+			return Response.status(Response.Status.UNAUTHORIZED).header("Access-Control-Allow-Origin", "*").build();
 		}
 
 	}

@@ -48,15 +48,18 @@ public class Registry {
 					dbms.createUser(pseudonym, password, email);
 					JSONObject profilDetails = new JSONObject();
 					profilDetails.put("success", "true");
-					return Response.status(Response.Status.OK).entity("").build();
+					System.out.println("nice");
+					return Response.status(Response.Status.OK).entity("").header("Access-Control-Allow-Origin", "*").build();
 				} catch (InvalidParameterException e) {
-					return Response.status(418).entity("Pseudonym or Username taken").build();
+					System.out.println("bad1");
+					return Response.status(418).entity("Pseudonym or Username taken").header("Access-Control-Allow-Origin", "*").build();
 				}
 			}
 		} catch (JSONException e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").header("Access-Control-Allow-Origin", "*").build();
 		}
-		return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
+		System.out.println("bad");
+		return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").header("Access-Control-Allow-Origin", "*").build();
 	}
 	
 	@OPTIONS

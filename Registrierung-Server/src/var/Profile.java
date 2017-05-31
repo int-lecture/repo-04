@@ -48,14 +48,14 @@ public class Profile {
 						contacts.put(contact);
 					}
 					profilDetails.put("contacts", contacts);
-					return Response.status(Response.Status.CREATED).entity(profilDetails).build();
+					return Response.status(Response.Status.CREATED).entity(profilDetails).header("Access-Control-Allow-Origin", "*").build();
 				}
 			}
 			// Probleme mit Authentifizierung oder Anfrage
 		} catch (JSONException e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").header("Access-Control-Allow-Origin", "*").build();
 		}
-		return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
+		return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").header("Access-Control-Allow-Origin", "*").build();
 	}
 	@OPTIONS
 	@Path("/profile")

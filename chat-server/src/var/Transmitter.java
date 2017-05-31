@@ -13,6 +13,7 @@ import java.util.Queue;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -86,6 +87,8 @@ public class Transmitter {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response postMessage(String recieved) throws ParseException, JSONException {
+		System.out.println(recieved);
+		System.out.println("peeeenis");
 		JSONObject jobj = new JSONObject(recieved);
 		Date date = sdf.parse(jobj.optString("date"));
 		int sequence = getSequence(jobj.optString("to")) ;
@@ -102,18 +105,28 @@ public class Transmitter {
 			}
 			messages.get(msg.to).put(msg.messageToJson(msg));
 			// return Response.status(201)
-			return Response.status(Response.Status.CREATED).entity(msg.toStringpost()).build();
+			return Response.status(Response.Status.CREATED).entity(msg.toStringpost()).header("Access-Control-Allow-Origin", "*").build();
 		}else {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Token ungültig").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Token ungültig").header("Access-Control-Allow-Origin", "*").build();
 		}
 			
 		}
 		else {
 			// return Response.status(400);
-			return Response.status(Response.Status.BAD_REQUEST).entity("Falsches Format.").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity("Falsches Format.").header("Access-Control-Allow-Origin", "*").build();
 		}
 	}
-
+	@OPTIONS
+	@Path("/send")
+	public Response optionsRegSend() {
+	    return Response.ok("")
+	            .header("Access-Control-Allow-Origin", "*")
+	            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+	            .header("Access-Control-Allow-Credentials", "true")
+	            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+	            .header("Access-Control-Max-Age", "1209600")
+	            .build();
+	}
 	/**
 	 * Die Methode zeigt alle Nachrichten an, welche bisher empfangen wurden
 	 *
@@ -171,17 +184,28 @@ public class Transmitter {
 				} catch (Exception e) {
 					e.printStackTrace();
 					// return Response.status(500);
-					return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+					return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Access-Control-Allow-Origin", "*").build();
 				}
 			} else {
 				// return Response.status(204);
-				return Response.status(Response.Status.NO_CONTENT).build();
+				return Response.status(Response.Status.NO_CONTENT).header("Access-Control-Allow-Origin", "*").build();
 			}
 		}
 		else {
 			// return Response.status(400);
-			return Response.status(Response.Status.BAD_REQUEST).build();
+			return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*").build();
 		}
+	}
+	@OPTIONS
+	@Path("/messages/{userid}/{sequenceNumber}")
+	public Response optionsRegGet() {
+	    return Response.ok("")
+	            .header("Access-Control-Allow-Origin", "*")
+	            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+	            .header("Access-Control-Allow-Credentials", "true")
+	            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+	            .header("Access-Control-Max-Age", "1209600")
+	            .build();
 	}
 
 }
