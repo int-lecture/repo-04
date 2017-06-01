@@ -58,7 +58,6 @@ public class Profile {
 		return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").header("Access-Control-Allow-Origin", "*").build();
 	}
 	@OPTIONS
-	@Path("/profile")
 	public Response optionsProfile() {
 	    return Response.ok("")
 	            .header("Access-Control-Allow-Origin", "*")

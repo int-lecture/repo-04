@@ -9,6 +9,10 @@ import com.sun.jersey.api.container.grizzly.GrizzlyWebContainerFactory;
 public class Main {
 	static SelectorThread threadSelector;
 	public static void main(String[] args) throws IllegalArgumentException, IOException {
+		DBMS dbms = new DBMS();
+		dbms.addContact("1", "Hans");
+		dbms.addContact("1", "Franz");
+		dbms.addContact("1", "Gans");
 		final String baseUri = "http://localhost:5002/";
 		startGrizzly(baseUri);
 		System.out.printf("Grizzly läuft unter %s%n", baseUri);
