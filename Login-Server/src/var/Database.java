@@ -10,11 +10,16 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bson.Document;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.mongodb.Block;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
@@ -77,6 +82,24 @@ class Database {
      * @return 
      * 
      */
+    public synchronized JSONObject getAllUsers(){
+    	DB database = mongoClient.getDB("users");
+    	 DBCollection collection = database.getCollection("user");
+
+    	  // To Find All the Records
+    	  DBCursor cursor = collection.find();
+    	  JSONObject jObj= new JSONObject();
+    	  int counter=0;
+    	  while(cursor.hasNext()) {
+    	      JSONObject temp= new JSONObject(cursor.next().toString());
+    	      jObj.put(String.valueOf(counter), temp.get("pseudonym"));
+    	      counter++;
+    	     
+    	  }
+    	  System.out.println(jObj);
+    	  return jObj;
+    	 };
+    
     public synchronized JSONObject getUserData (String user){
     	//
     	MongoCollection<Document> collection = database.getCollection("user");

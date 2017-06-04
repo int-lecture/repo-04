@@ -160,7 +160,7 @@ public class Login {
 		return String.format("{ 'succes': '%s', 'expireDate': '%s'}".replace('\'', '"'), success, date);
 
 	}
-
+		
 
 	@POST
 	@Path("/login")
@@ -227,6 +227,14 @@ public class Login {
 		}
 
 	}
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/users")
+	public Response users(){
+		JSONObject temp=mongo.getAllUsers();
+		return Response.status(Response.Status.OK).entity(temp.toString()).header("Access-Control-Allow-Origin", "*").build();}
+	
+	
 	@OPTIONS
 	@Path("/login")
 	public Response optionsReg() {
@@ -250,4 +258,16 @@ public class Login {
 	            .header("Access-Control-Max-Age", "1209600")
 	            .build();
 	}
+
+	@OPTIONS
+	@Path("/users")
+	public Response optionsUsers() {
+	    return Response.ok("")
+	            .header("Access-Control-Allow-Origin", "*")
+	            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+	            .header("Access-Control-Allow-Credentials", "true")
+	            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+	            .header("Access-Control-Max-Age", "1209600")
+	            .build();
+}
 }
