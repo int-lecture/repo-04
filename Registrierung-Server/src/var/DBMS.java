@@ -13,6 +13,11 @@ import java.util.Date;
 import javax.ws.rs.core.Response;
 
 import org.bson.Document;
+import org.json.JSONObject;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
@@ -27,7 +32,7 @@ public class DBMS {
 
 	public static final String ISO8601 = "yyyy-MM-dd'T'HH:mm:ssZ";
 
-	private static final String MONGO_URL = "mongodb://localhost:27017";
+	private static final String MONGO_URL = "mongodb://141.19.142.58:27017";
 	//private static final String MONGO_URL = "mongodb://141.19.142.58:";
 
 	/** URI to the MongoDB instance. */
@@ -42,6 +47,30 @@ public class DBMS {
 	/** Mongo Collection for accounts */
 
 	/** Mongo Collection for tokens which belongs to a account */
+	public synchronized JSONObject getAllUsers(String pseudonym){
+    	DB database = mongoClient.getDB("users");
+    	 DBCollection collection = database.getCollection("user");
+
+    	  // To Find All the Records
+    	  DBCursor cursor = collection.find();
+    	  JSONObject jObj= new JSONObject();
+    	  int counter=0;
+    	  String[] contacts= getContacts(pseudonym);
+    	  while(cursor.hasNext()) {
+    	      JSONObject temp= new JSONObject(cursor.next().toString());
+    	      boolean noClone=true;
+    	      for(int i=0; i<contacts.length; i++){
+    	    	  if(contacts[i].equals( temp.get("pseudonym"))||contacts[i]==pseudonym){
+    	    		  noClone=false;}
+    	      }
+    	      if(noClone){
+    	      jObj.put(String.valueOf(counter), temp.get("pseudonym"));
+    	      counter++;
+    	      }
+    	     
+    	  }
+    	  return jObj;
+    	 };
 
 	public void addContact(String user, String contact) {
 		MongoCollection<Document> contactCollection = database.getCollection("contact");
@@ -54,6 +83,7 @@ public class DBMS {
 	}
 
 	public String[] getContacts(String user) {
+
 		MongoCollection<Document> contactCollection = database.getCollection("contact");
 		FindIterable<Document> contacts = contactCollection.find(eq("pseudonym", user));
 		long size = contactCollection.count(eq("pseudonym", user));
@@ -95,18 +125,14 @@ public class DBMS {
 	}
 
 	public boolean checkToken(String pseudonym, String token) {
-		String url = "http://141.19.142.58:5001/auth";
+		String url = "http://localhost:5001/auth";
 		Client client = Client.create();
-
 		WebResource webResource = client
 		   .resource(url);
-
 		String input = "{\"token\": \"" + token + "\",\"pseudonym\": \"" + pseudonym + "\"}";
 		System.out.println(input);
-
 		ClientResponse response = webResource.type("application/json")
 		   .post(ClientResponse.class, input);
-		
 		if (response.getStatus() != 200) {
 			System.out.println(response.getStatus());
 			return false;

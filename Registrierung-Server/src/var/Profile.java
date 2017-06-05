@@ -47,7 +47,7 @@ public class Profile {
 					for (String contact : dbms.getContacts(profile)) {
 						contacts.put(contact);
 					}
-					profilDetails.put("contacts", contacts);
+					profilDetails.put("contacts", contacts); 
 					return Response.status(Response.Status.CREATED).entity(profilDetails).header("Access-Control-Allow-Origin", "*").build();
 				}
 			}

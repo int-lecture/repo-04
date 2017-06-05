@@ -13,6 +13,9 @@ import org.bson.Document;
 import org.json.JSONObject;
 
 import com.mongodb.Block;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
@@ -23,7 +26,7 @@ import com.mongodb.client.MongoDatabase;
  * Storage provider for a MongoDB.
  */
 class Database {
-	private static String MONGO_URL= "mongodb://localhost:27017";
+	private static String MONGO_URL= "mongodb://141.19.142.58:27017";
     /** URI to the MongoDB instance. */
     private static MongoClientURI connectionString = new MongoClientURI(MONGO_URL);
 
@@ -77,6 +80,7 @@ class Database {
      * @return 
      * 
      */
+  
     public synchronized JSONObject getUserData (String user){
     	//
     	MongoCollection<Document> collection = database.getCollection("user");

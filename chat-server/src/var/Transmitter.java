@@ -87,8 +87,6 @@ public class Transmitter {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response postMessage(String recieved) throws ParseException, JSONException {
-		System.out.println(recieved);
-		System.out.println("peeeenis");
 		JSONObject jobj = new JSONObject(recieved);
 		Date date = sdf.parse(jobj.optString("date"));
 		int sequence = getSequence(jobj.optString("to")) ;
@@ -149,17 +147,17 @@ public class Transmitter {
 	 * @param seqence Sequenznummer der Nachricht
 	 * @return Nachricht
 	 * @throws ParseException
+	 * 
 	 */
+	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/messages/{userid}/{sequenceNumber}")
 	public Response getMessages(@PathParam("userid") String user_id, @PathParam("sequenceNumber") int sequence,  @Context HttpHeaders header) throws JSONException, ParseException {
 		MultivaluedMap<String, String> map = header.getRequestHeaders();
-			System.out.println("Test1");
 		if (messages.containsKey(user_id)) {
-			System.out.println("test2");
 			JSONArray cloneArray = messages.get(user_id);
-			System.out.println("test3");
 			JSONArray msgArray=new JSONArray();
 			//Lösche Token vom Token String und speichere es in 'JSONObject
 			String temp=(map.get("Authorization").get(0)).replaceAll("Token ", "");
@@ -177,10 +175,11 @@ public class Transmitter {
 			}
 			//Alte Nachrichten l�schen
 			if (msgArray.length()!=0){
+		
 				messages.put(user_id, msgArray);
 				try {
 					// return Response.status(200);
-					return Response.status(Response.Status.OK).entity(msgArray.toString()).build();
+					return Response.status(Response.Status.OK).entity(msgArray.toString()).header("Access-Control-Allow-Origin", "*").build();
 				} catch (Exception e) {
 					e.printStackTrace();
 					// return Response.status(500);
@@ -193,12 +192,24 @@ public class Transmitter {
 		}
 		else {
 			// return Response.status(400);
+
 			return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*").build();
 		}
 	}
 	@OPTIONS
 	@Path("/messages/{userid}/{sequenceNumber}")
 	public Response optionsRegGet() {
+	    return Response.ok("")
+	            .header("Access-Control-Allow-Origin", "*")
+	            .header("Access-Control-Allow-Headers", "origin, content-type, token, accept, authorization")
+	            .header("Access-Control-Allow-Credentials", "true")
+	            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+	            .header("Access-Control-Max-Age", "1209600")
+	            .build();
+	}
+	@OPTIONS
+	@Path("/messages/{userid}")
+	public Response optionsRegGet2() {
 	    return Response.ok("")
 	            .header("Access-Control-Allow-Origin", "*")
 	            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")

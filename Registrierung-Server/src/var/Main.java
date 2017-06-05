@@ -13,7 +13,7 @@ public class Main {
 		dbms.addContact("1", "Hans");
 		dbms.addContact("1", "Franz");
 		dbms.addContact("1", "Gans");
-		final String baseUri = "http://localhost:5002/";
+		final String baseUri = "http://141.19.142.58:5002/";
 		startGrizzly(baseUri);
 		System.out.printf("Grizzly läuft unter %s%n", baseUri);
 		System.out.println("[ENTER] drücken, um Grizzly zu beenden");

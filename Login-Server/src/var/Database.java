@@ -28,7 +28,7 @@ import com.mongodb.client.MongoDatabase;
  * Storage provider for a MongoDB.
  */
 class Database {
-	private static String MONGO_URL= "mongodb://localhost:27017";
+	private static String MONGO_URL= "mongodb://141.19.142.58:27017";
     /** URI to the MongoDB instance. */
     private static MongoClientURI connectionString = new MongoClientURI(MONGO_URL);
 
@@ -82,23 +82,7 @@ class Database {
      * @return 
      * 
      */
-    public synchronized JSONObject getAllUsers(){
-    	DB database = mongoClient.getDB("users");
-    	 DBCollection collection = database.getCollection("user");
-
-    	  // To Find All the Records
-    	  DBCursor cursor = collection.find();
-    	  JSONObject jObj= new JSONObject();
-    	  int counter=0;
-    	  while(cursor.hasNext()) {
-    	      JSONObject temp= new JSONObject(cursor.next().toString());
-    	      jObj.put(String.valueOf(counter), temp.get("pseudonym"));
-    	      counter++;
-    	     
-    	  }
-    	  System.out.println(jObj);
-    	  return jObj;
-    	 };
+    
     
     public synchronized JSONObject getUserData (String user){
     	//
