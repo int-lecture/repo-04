@@ -32,7 +32,7 @@ public class DBMS {
 
 	public static final String ISO8601 = "yyyy-MM-dd'T'HH:mm:ssZ";
 
-	private static final String MONGO_URL = "mongodb://141.19.142.58:27017";
+	private static final String MONGO_URL = "mongodb://localhost:27017";
 	//private static final String MONGO_URL = "mongodb://141.19.142.58:";
 
 	/** URI to the MongoDB instance. */

@@ -89,19 +89,21 @@ public class Transmitter {
 	public Response postMessage(String recieved) throws ParseException, JSONException {
 		JSONObject jobj = new JSONObject(recieved);
 		Date date = sdf.parse(jobj.optString("date"));
-		int sequence = getSequence(jobj.optString("to")) ;
+		int sequence = (int)mongo.retrieveAndUpdateSequence(jobj.getString("from")) ;
+		//int sequence = getSequence(jobj.optString("to")) ;
 		//messageID erh�hen bei neuer Nachricht
-		messageIds.put(jobj.optString("to"), ++sequence);
+		//messageIds.put(jobj.optString("to"), ++sequence);
 		jobj.put("sequence", sequence);
 		Message msg = new Message(jobj.optString("token"),jobj.optString("from"), jobj.optString("to"), date, jobj.optString("text"), sequence);
 		if (msg.token != null && msg.from != null && msg.to != null && msg.date != null && msg.text != null) {
 			//Testen ob Erste NAchricht f�r den EMpf�nger
 			if(isValidToken(jobj)){
-			if (!messages.containsKey(msg.to)) {
-				JSONArray array = new JSONArray();
-				messages.put(msg.to, array);
-			}
-			messages.get(msg.to).put(msg.messageToJson(msg));
+			//if (!messages.containsKey(msg.to)) {
+				//JSONArray array = new JSONArray();
+			//	messages.put(msg.to, array);
+			//}
+			//messages.get(msg.to).put(msg.messageToJson(msg));
+			mongo.storeMessage(msg);
 			// return Response.status(201)
 			return Response.status(Response.Status.CREATED).entity(msg.toStringpost()).header("Access-Control-Allow-Origin", "*").build();
 		}else {
@@ -154,10 +156,19 @@ public class Transmitter {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/messages/{userid}/{sequenceNumber}")
-	public Response getMessages(@PathParam("userid") String user_id, @PathParam("sequenceNumber") int sequence,  @Context HttpHeaders header) throws JSONException, ParseException {
+	public Response getMessages(@PathParam("userid") String user_id, @PathParam("sequenceNumber") int sequence,  @Context HttpHeaders header) throws JSONException, ParseException {	
 		MultivaluedMap<String, String> map = header.getRequestHeaders();
-		if (messages.containsKey(user_id)) {
-			JSONArray cloneArray = messages.get(user_id);
+		List<Message> neueNachrichten= mongo.retrieveMessages(user_id,sequence,true);
+		JSONArray cloneArray =new JSONArray();
+		System.out.println("test1");
+		System.out.println(neueNachrichten);
+		if (neueNachrichten!=null) {
+			System.out.println("test2");
+			for (Message m : neueNachrichten) {
+				System.out.println("test3");
+				cloneArray.put(m.messageToJson(m));
+			} 
+			System.out.println("error");
 			JSONArray msgArray=new JSONArray();
 			//Lösche Token vom Token String und speichere es in 'JSONObject
 			String temp=(map.get("Authorization").get(0)).replaceAll("Token ", "");
@@ -176,7 +187,7 @@ public class Transmitter {
 			//Alte Nachrichten l�schen
 			if (msgArray.length()!=0){
 		
-				messages.put(user_id, msgArray);
+				//messages.put(user_id, msgArray);
 				try {
 					// return Response.status(200);
 					return Response.status(Response.Status.OK).entity(msgArray.toString()).header("Access-Control-Allow-Origin", "*").build();

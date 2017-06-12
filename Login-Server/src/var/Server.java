@@ -26,7 +26,7 @@ public class Server {
 		JSONObject jobject= new JSONObject("{'user':'job@web.de','pseudonym':'job'}" );
 		jobject.put("password", password2);
 		mongo.saveUserData(jobject);
-	final String baseUri = "http://141.19.142.58:5001/";
+	final String baseUri = "http://localhost:5001/";
 	final String paket = "var";
 	final Map<String, String> initParams = new HashMap<String, String>();
 	initParams.put("com.sun.jersey.config.property.packages", paket);

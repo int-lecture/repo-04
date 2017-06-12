@@ -67,6 +67,13 @@ class Message {
 		this.sequence = sequence;
 	}
 
+	public Message(String from, String to, Date date, String text, int sequence) {
+		this.from = from;
+		this.to = to;
+		this.date = date;
+		this.text = text;
+		this.sequence = sequence;
+	}
 	/**
 	 * Create a new message.
 	 *

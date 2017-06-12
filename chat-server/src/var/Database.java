@@ -26,7 +26,7 @@ import com.mongodb.client.MongoDatabase;
  * Storage provider for a MongoDB.
  */
 class Database {
-	private static String MONGO_URL= "mongodb://141.19.142.58:27017";
+	private static String MONGO_URL= "mongodb://localhost:27017";
     /** URI to the MongoDB instance. */
     private static MongoClientURI connectionString = new MongoClientURI(MONGO_URL);
 
@@ -36,12 +36,11 @@ class Database {
     /** Mongo database. */
     private static MongoDatabase database = mongoClient.getDatabase("users");
 
-    /**
-      @see var.chat.server.persistence.StorageProvider#retrieveAndUpdateSequence(java.lang.String)
+  
+      
      
     public synchronized long retrieveAndUpdateSequence(String userId) {
-        MongoCollection<Document> sequences = database.getCollection(
-                "sequences");
+        MongoCollection<Document> sequences = database.getCollection("sequences");
 
         Document seqDoc = sequences.find(eq("user", userId)).first();
         long sequence = 1L;
@@ -60,11 +59,14 @@ class Database {
 
         return sequence;
     }
- */
+
     /**
      * @see var.chat.server.persistence.StorageProvider#storeMessage(var.chat.server.domain.Message)
      */
-  /**  public synchronized void storeMessage(Message message) {
+
+    
+    
+    public synchronized void storeMessage(Message message) {
         MongoCollection<Document> collection = database.getCollection("messages");
 
         Document doc = new Document("from", message.from)
@@ -75,12 +77,42 @@ class Database {
 
         collection.insertOne(doc);
     }
-*/
+    
+    public synchronized List<Message> retrieveMessages(String userId,
+            long sequenceNumber, boolean deleteOldMessages) {
+
+        MongoCollection<Document> collection = database.getCollection("messages");
+        // Remove Messages with seq < provided seq no
+        if (deleteOldMessages) {
+            collection.deleteMany(and(lte("sequence", sequenceNumber), eq("to", userId)));
+        }
+        // Retreive remaining documents
+        List<Document> documents = new ArrayList<>();
+        collection.find(and(gt("sequence", sequenceNumber), eq("to", userId)))
+                .forEach((Block<Document>) e -> documents.add(e));
+        // No messages for user there
+        if (documents.isEmpty()) {
+            return null;
+        }
+        List<Message> messagesForUser = new ArrayList<>();
+        Collections.sort(messagesForUser, (a,b) -> (int) (b.sequence - a.sequence));
+        for (Document document : documents) {
+            Message m = new Message(document.getString("from"),
+            		document.getString("to"),
+            		document.getDate("date"),
+            		document.getString("text"),
+            		document.getInteger("sequence"));
+
+            messagesForUser.add(m);
+        }
+        return messagesForUser;
+}
+
     /**Methode um Benutzersdaten
      * @return 
      * 
      */
-  
+
     public synchronized JSONObject getUserData (String user){
     	//
     	MongoCollection<Document> collection = database.getCollection("user");
