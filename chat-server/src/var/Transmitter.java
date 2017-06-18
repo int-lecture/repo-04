@@ -175,9 +175,9 @@ public class Transmitter {
 			JSONObject testToken = new JSONObject();
 			testToken.put("token", temp);
 			testToken.put("from", user_id);
-			if(!isValidToken(testToken)){
+			if(isValidToken(testToken)){
 				
-			}
+			
 			//alle neuen Nachrichten in msgArray speichern
 			for (int i=0; i<cloneArray.length();i++){
 				if ((cloneArray.getJSONObject(i).getInt("sequence")>sequence)||sequence==0){
@@ -199,6 +199,9 @@ public class Transmitter {
 			} else {
 				// return Response.status(204);
 				return Response.status(Response.Status.NO_CONTENT).header("Access-Control-Allow-Origin", "*").build();
+			}
+			}else{
+				return Response.status(Response.Status.UNAUTHORIZED).entity("Token ungültig").header("Access-Control-Allow-Origin", "*").build();
 			}
 		}
 		else {
